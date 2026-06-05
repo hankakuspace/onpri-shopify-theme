@@ -1,12 +1,14 @@
 {% comment %}
   snippets/onpri-customizer.liquid
   ONPRI Customizer storefront placeholder.
-  This is the first storefront verification step.
+  Uses product metafield: onpri.customizer_product_id
 {% endcomment %}
+
+{%- assign onpri_customizer_product_id = product.metafields.onpri.customizer_product_id.value | default: '' -%}
 
 <div
   data-onpri-customizer
-  data-product-id="{{ product.metafields.onpri.customizer_product_id | default: 'product-02' }}"
+  data-product-id="{{ onpri_customizer_product_id | escape }}"
   data-api-base="https://conditioning-learned-grand-societies.trycloudflare.com"
 ></div>
 
