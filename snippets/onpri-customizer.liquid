@@ -1,0 +1,16 @@
+{% comment %}
+  snippets/onpri-customizer.liquid
+  ONPRI Customizer storefront placeholder.
+  This is the first storefront verification step.
+{% endcomment %}
+
+<div
+  data-onpri-customizer
+  data-product-id="{{ product.metafields.onpri.customizer_product_id | default: 'product-02' }}"
+  data-api-base="https://conditioning-learned-grand-societies.trycloudflare.com"
+></div>
+
+<script
+  src="https://conditioning-learned-grand-societies.trycloudflare.com/onpri-customizer.js"
+  defer="defer"
+></script>
