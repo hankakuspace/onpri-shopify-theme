@@ -56,6 +56,12 @@
           class="product-variant-id"
         >
 
+        <input
+          type="hidden"
+          name="properties[_onpri_brand_id]"
+          value="{% if product.metafields.onpri.brand_id != blank %}{{ product.metafields.onpri.brand_id | escape }}{% elsif product.tags contains 'brand-a' %}brand-a{% elsif product.tags contains 'brand-b' %}brand-b{% endif %}"
+        >
+
         {%- if gift_card_recipient_feature_active -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         {%- endif -%}
