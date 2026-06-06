@@ -126,7 +126,33 @@
     }
   });
 
+  function scheduleValidateCartBrand() {
+    [300, 700, 1200, 2000].forEach(function (delay) {
+      window.setTimeout(validateCartBrand, delay);
+    });
+  }
+
   document.addEventListener('click', function () {
-    window.setTimeout(validateCartBrand, 700);
+    scheduleValidateCartBrand();
   });
+
+  if (window.MutationObserver) {
+    var cartContainer =
+      document.querySelector('cart-items') ||
+      document.querySelector('.cart__items') ||
+      document.querySelector('main');
+
+    if (cartContainer) {
+      var observer = new MutationObserver(function () {
+        scheduleValidateCartBrand();
+      });
+
+      observer.observe(cartContainer, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  }
+
+  window.addEventListener('pageshow', validateCartBrand);
 })();
