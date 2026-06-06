@@ -45,7 +45,73 @@
                               <div class="product-option onpri-cart-preview">
                                 <button
                                   type="button"
-                                  onclick="document.getElementById('OnpriCartPreviewModal-notification-{{ item.key | handleize }}').style.display = 'flex';"
+                                  onclick="
+                                    (function() {
+                                      var existing = document.getElementById('OnpriPreviewLightbox');
+                                      if (existing) existing.remove();
+
+                                      var overlay = document.createElement('div');
+                                      overlay.id = 'OnpriPreviewLightbox';
+                                      overlay.style.position = 'fixed';
+                                      overlay.style.inset = '0';
+                                      overlay.style.zIndex = '2147483647';
+                                      overlay.style.display = 'flex';
+                                      overlay.style.alignItems = 'center';
+                                      overlay.style.justifyContent = 'center';
+                                      overlay.style.padding = '24px';
+                                      overlay.style.background = 'rgba(0, 0, 0, 0.82)';
+
+                                      var panel = document.createElement('div');
+                                      panel.style.position = 'relative';
+                                      panel.style.width = 'min(90vw, 720px)';
+                                      panel.style.maxHeight = '90vh';
+                                      panel.style.padding = '24px';
+                                      panel.style.borderRadius = '12px';
+                                      panel.style.background = '#fff';
+                                      panel.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.35)';
+
+                                      var closeButton = document.createElement('button');
+                                      closeButton.type = 'button';
+                                      closeButton.textContent = '×';
+                                      closeButton.setAttribute('aria-label', 'ONPRIプレビュー画像を閉じる');
+                                      closeButton.style.position = 'absolute';
+                                      closeButton.style.top = '12px';
+                                      closeButton.style.right = '12px';
+                                      closeButton.style.zIndex = '2147483647';
+                                      closeButton.style.border = '0';
+                                      closeButton.style.background = '#111';
+                                      closeButton.style.color = '#fff';
+                                      closeButton.style.width = '32px';
+                                      closeButton.style.height = '32px';
+                                      closeButton.style.borderRadius = '50%';
+                                      closeButton.style.cursor = 'pointer';
+
+                                      var image = document.createElement('img');
+                                      image.src = '{{ onpri_preview_image_url }}';
+                                      image.alt = '{{ item.product.title | escape }} ONPRIプレビュー';
+                                      image.style.display = 'block';
+                                      image.style.width = '100%';
+                                      image.style.maxHeight = '80vh';
+                                      image.style.objectFit = 'contain';
+                                      image.style.background = '#fff';
+
+                                      function closeLightbox() {
+                                        overlay.remove();
+                                        document.documentElement.style.overflow = '';
+                                      }
+
+                                      closeButton.onclick = closeLightbox;
+                                      overlay.onclick = function(event) {
+                                        if (event.target === overlay) closeLightbox();
+                                      };
+
+                                      panel.appendChild(closeButton);
+                                      panel.appendChild(image);
+                                      overlay.appendChild(panel);
+                                      document.body.appendChild(overlay);
+                                      document.documentElement.style.overflow = 'hidden';
+                                    })();
+                                  "
                                   style="padding: 0; border: 0; background: transparent; cursor: zoom-in;"
                                   aria-label="ONPRIプレビュー画像を拡大表示"
                                 >
@@ -55,29 +121,6 @@
                                     style="width: 72px; height: 72px; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; background: #fff;"
                                   >
                                 </button>
-
-                                <div
-                                  id="OnpriCartPreviewModal-notification-{{ item.key | handleize }}"
-                                  style="display: none; position: fixed; inset: 0; z-index: 2147483647; align-items: center; justify-content: center; padding: 24px; background: rgba(0, 0, 0, 0.6);"
-                                >
-                                  <div
-                                    style="position: relative; z-index: 2147483647; width: min(90vw, 720px); max-height: 90vh; padding: 24px; border-radius: 12px; background: #fff; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35); overflow: auto;"
-                                  >
-                                    <button
-                                      type="button"
-                                      onclick="document.getElementById('OnpriCartPreviewModal-notification-{{ item.key | handleize }}').style.display = 'none';"
-                                      style="position: absolute; top: 12px; right: 12px; z-index: 2147483647; border: 0; background: #111; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;"
-                                      aria-label="ONPRIプレビュー画像を閉じる"
-                                    >
-                                      ×
-                                    </button>
-                                    <img
-                                      src="{{ onpri_preview_image_url }}"
-                                      alt="{{ item.product.title | escape }} ONPRIプレビュー"
-                                      style="display: block; width: 100%; max-height: 80vh; object-fit: contain; background: #fff;"
-                                    >
-                                  </div>
-                                </div>
                               </div>
                             {%- endif -%}
                           {%- endif -%}
