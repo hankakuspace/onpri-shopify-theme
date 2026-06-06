@@ -86,18 +86,29 @@
                       aria-label="{{- 'products.product.nested_label' | t: title: item.product.title, parent_title: item.parent_relationship.parent.title | escape -}}"
                     {% endif %}
                   >
+                    {%- assign onpri_customization_type = '' -%}
+                    {%- for property in item.properties -%}
+                      {%- if property.first == 'ONPRIカスタマイズ種別' -%}
+                        {%- assign onpri_customization_type = property.last -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- assign onpri_cart_display_image = item.image -%}
+                    {%- if onpri_customization_type == '名入れ' and item.product.featured_image != blank -%}
+                      {%- assign onpri_cart_display_image = item.product.featured_image -%}
+                    {%- endif -%}
+
                     <td class="cart-item__media">
-                      {% if item.image %}
+                      {% if onpri_cart_display_image %}
                         {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
                         <a href="{{ item.url }}" class="cart-item__link" aria-hidden="true" tabindex="-1"> </a>
                         <div class="cart-item__image-container gradient {% if item.parent_relationship.parent == null %}global-media-settings{% endif %}">
                           <img
-                            src="{{ item.image | image_url: width: 300 }}"
+                            src="{{ onpri_cart_display_image | image_url: width: 300 }}"
                             class="cart-item__image {% if item.parent_relationship.parent != null %}global-media-settings{% endif %}"
-                            alt="{{ item.image.alt | escape }}"
+                            alt="{{ onpri_cart_display_image.alt | default: item.product.title | escape }}"
                             loading="lazy"
                             width="150"
-                            height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+                            height="{{ 150 | divided_by: onpri_cart_display_image.aspect_ratio | ceil }}"
                           >
                         </div>
                       {% endif %}

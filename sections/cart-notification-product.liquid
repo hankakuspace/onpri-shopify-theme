@@ -1,13 +1,24 @@
 {%- if cart != empty -%}
   {%- for item in cart.items -%}
     <div id="cart-notification-product-{{ item.key }}" class="cart-item">
-      {%- if item.image -%}
+      {%- assign onpri_customization_type = '' -%}
+      {%- for property in item.properties -%}
+        {%- if property.first == 'ONPRIカスタマイズ種別' -%}
+          {%- assign onpri_customization_type = property.last -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- assign onpri_cart_display_image = item.image -%}
+      {%- if onpri_customization_type == '名入れ' and item.product.featured_image != blank -%}
+        {%- assign onpri_cart_display_image = item.product.featured_image -%}
+      {%- endif -%}
+
+      {%- if onpri_cart_display_image -%}
         <div class="cart-notification-product__image global-media-settings">
           <img
-            src="{{ item.image | image_url: width: 140 }}"
-            alt="{{ item.image.alt | escape }}"
+            src="{{ onpri_cart_display_image | image_url: width: 140 }}"
+            alt="{{ onpri_cart_display_image.alt | default: item.product.title | escape }}"
             width="70"
-            height="{{ 70 | divided_by: item.image.aspect_ratio | ceil }}"
+            height="{{ 70 | divided_by: onpri_cart_display_image.aspect_ratio | ceil }}"
             loading="lazy"
           >
         </div>
