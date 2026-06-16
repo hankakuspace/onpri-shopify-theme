@@ -2,17 +2,23 @@
   snippets/onpri-customizer.liquid
   ONPRI Customizer storefront placeholder.
   Uses product metafield: onpri.customizer_product_id
+
+  ONPRI管理画面で対象にした商品のみ、商品詳細でONPRI Customizerを起動します。
+  product.metafields.onpri.customizer_product_id が未設定の商品では、
+  placeholder div / script を出力しません。
 {% endcomment %}
 
 {%- assign onpri_customizer_product_id = product.metafields.onpri.customizer_product_id.value | default: '' -%}
 
-<div
-  data-onpri-customizer
-  data-product-id="{{ onpri_customizer_product_id | escape }}"
-  data-api-base="https://alike-armor-drums-meant.trycloudflare.com"
-></div>
+{%- if onpri_customizer_product_id != blank -%}
+  <div
+    data-onpri-customizer
+    data-product-id="{{ onpri_customizer_product_id | escape }}"
+    data-api-base="https://onpri-app.vercel.app"
+  ></div>
 
-<script
-  src="https://alike-armor-drums-meant.trycloudflare.com/onpri-customizer.js"
-  defer="defer"
-></script>
+  <script
+    src="https://onpri-app.vercel.app/onpri-customizer.js?v=20260606-2145"
+    defer="defer"
+  ></script>
+{%- endif -%}
